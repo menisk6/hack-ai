@@ -34,16 +34,6 @@ https://rutube.ru/info/taboo_agreement/
 https://rutube.ru/info/socially_important/
 https://rutube.ru/info/adverguide/
 https://rutube.ru/info/content/'''
-    # current_conversation_stage: str = "1"
-    # conversation_stage: str = "Введение. Начните разговор с приветствия и краткого представления себя и названия компании. Поинтересуйтесь, в чём проблема пользователя"
-
-    # conversation_stage_dict: dict = {
-    #     "1": "Введение. Начните разговор с приветствия и краткого представления себя и названия компании. Поинтересуйтесь, в чём проблема пользователя",
-    #     "2": "Уточнения. Уточните у пользователя что именно у него случилось",
-    #     "3": "Решение. Решите проблему пользователя опираясь на используемую базу знаний",
-    #     "4": "Итог. Поинтересуйтесь у пользователя, помогли ли вы решить его проблему",
-    #     "5": "Оператор. Если пользователь требует связать его с человеком (оператором), вежливо ответь чтобы немного подождал"
-    # }
 
     analyzer_history: list = []
     analyzer_history_template: list = [("system", """Ты - помощник, который разделяет вопрос и ответ на определённую заранее известную категорию.
@@ -63,14 +53,6 @@ https://rutube.ru/info/content/'''
 Твоя основная задача: Написать название одной из данных категорий, в зависимости от вопроса и ответа которые тебе будут переданы.
 Ты можешь писать только названия категорий так, как они написаны выше, больше ничего другого писать нельзя.
 Если вопрос и ответ не попадает от определённую категорию, относи его в категорию ОТСУТСТВУЕТ""")]
-
-#     analyzer_system_postprompt_template: list = [("system", """Отвечайте только цифрой от 1 до 5, чтобы лучше понять, на каком этапе следует продолжить разговор.
-# Ответ должен состоять только из одной цифры, без слов.
-# Если истории разговоров нет, выведите 1.
-# Больше ничего не отвечайте и ничего не добавляйте к своему ответу.
-
-# Текущая стадия разговора:
-# """)]
 
     conversation_history: list = []
     conversation_history_template: list = [("system", """Никогда не забывайте, что ваше имя {salesperson_name}, вы мужчина. Вы работаете {salesperson_role}. Вы работаете в компании под названием {company_name}. Бизнес {company_name} заключается в следующем: {company_business}.
@@ -101,8 +83,6 @@ https://rutube.ru/info/content/'''
 Обязательно ответь на следующий вопрос использую данный диалог как базу знаний:
 {knowladge_base}                                                                                                           
 """)]
-# Текущая стадия разговора:
-# {conversation_stage}
 
     @property
     def input_keys(self) -> List[str]:
@@ -111,9 +91,6 @@ https://rutube.ru/info/content/'''
     @property
     def output_keys(self) -> List[str]:
         return []
-
-    # def retrieve_conversation_stage(self, key):
-    #     return self.conversation_stage_dict.get(key, '1')
 
     def seed_agent(self):
 
@@ -152,9 +129,6 @@ https://rutube.ru/info/content/'''
         # print(response.content)
         return response.content 
 
-        # self.current_conversation_stage = self.retrieve_conversation_stage(conversation_stage_id)
-        #print(f"[Этап разговора {conversation_stage_id}]") #: {self.current_conversation_stage}")
-
     def _call(self, topics: List[Any], API = False) -> None:
         messages = self.conversation_history + self.conversation_system_postprompt_template
         template = ChatPromptTemplate.from_messages(messages)
@@ -175,8 +149,6 @@ https://rutube.ru/info/content/'''
         else: 
             self.analyzer_history.pop()
             self.conversation_history.pop()
-        # self.analyzer_history.append(("user", ai_message))
-        
 
         return ai_message
 
